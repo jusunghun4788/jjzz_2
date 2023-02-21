@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: Video Processing
+  labels:
+    app: Video Processing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: Video Processing
+  template:
+    metadata:
+      labels:
+        app: Video Processing
+    spec:
+      containers:
+        - name: Video Processing
+          image: username/Video Processing:latest
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 5
